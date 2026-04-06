@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { getProducts, type Product } from "@/lib/productStore";
 import FlyerDisplay from "@/components/FlyerDisplay";
 import DarkModeToggle from "@/components/DarkModeToggle";
+import storeBg from "@/assets/store-bg.png";
 import { Button } from "@/components/ui/button";
 import { Settings } from "lucide-react";
 
@@ -14,7 +15,7 @@ const Index = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background" style={{ backgroundImage: `url(${storeBg})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundAttachment: 'fixed' }}>
       <header className="sticky top-0 z-50 border-b border-border bg-card px-4 py-3 shadow-sm">
         <div className="mx-auto flex max-w-3xl items-center justify-between">
           <h2 className="text-lg font-bold text-foreground">🛒 Super Rede</h2>
