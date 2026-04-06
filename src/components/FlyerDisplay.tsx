@@ -1,6 +1,7 @@
 import type { Product } from "@/lib/productStore";
 import ProductCard from "./ProductCard";
 import { ShoppingCart } from "lucide-react";
+import storeBg from "@/assets/store-bg.png";
 
 interface FlyerDisplayProps {
   products: Product[];
@@ -9,17 +10,25 @@ interface FlyerDisplayProps {
 const FlyerDisplay = ({ products }: FlyerDisplayProps) => {
   return (
     <div className="mx-auto w-full max-w-3xl overflow-hidden rounded-2xl border-4 border-primary shadow-2xl">
-      {/* Header */}
-      <div className="bg-primary px-4 py-6 text-center">
-        <div className="flex items-center justify-center gap-2">
-          <ShoppingCart className="h-8 w-8 text-primary-foreground" />
-          <h1 className="text-3xl font-extrabold tracking-tight text-primary-foreground sm:text-4xl">
-            SUPER OFERTAS
-          </h1>
+      {/* Store background banner */}
+      <div className="relative h-48 w-full overflow-hidden sm:h-56">
+        <img
+          src={storeBg}
+          alt="Fachada Super Rede"
+          className="h-full w-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-primary/90 to-primary/30" />
+        <div className="absolute inset-0 flex flex-col items-center justify-end pb-4">
+          <div className="flex items-center gap-2">
+            <ShoppingCart className="h-8 w-8 text-primary-foreground drop-shadow-md" />
+            <h1 className="text-3xl font-extrabold tracking-tight text-primary-foreground drop-shadow-md sm:text-4xl">
+              SUPER OFERTAS
+            </h1>
+          </div>
+          <p className="mt-1 text-sm font-semibold text-secondary drop-shadow-sm">
+            Super Rede — O barato do seu lado!
+          </p>
         </div>
-        <p className="mt-1 text-sm font-semibold text-secondary">
-          BR Supermercados — Sempre o menor preço!
-        </p>
       </div>
 
       {/* Subheader */}
@@ -29,7 +38,7 @@ const FlyerDisplay = ({ products }: FlyerDisplayProps) => {
         </span>
       </div>
 
-      {/* Product Grid — expands dynamically */}
+      {/* Product Grid */}
       <div className="bg-flyer-bg p-4 transition-all duration-500">
         {products.length === 0 ? (
           <p className="py-12 text-center text-muted-foreground">
