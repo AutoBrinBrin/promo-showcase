@@ -57,6 +57,17 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        promo: {
+          badge: "hsl(var(--promo-badge))",
+          "badge-foreground": "hsl(var(--promo-badge-foreground))",
+        },
+        flyer: {
+          bg: "hsl(var(--flyer-bg))",
+          header: "hsl(var(--flyer-header))",
+        },
+        price: {
+          highlight: "hsl(var(--price-highlight))",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
