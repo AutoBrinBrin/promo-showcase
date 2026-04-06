@@ -9,7 +9,7 @@ interface FlyerDisplayProps {
 
 const FlyerDisplay = ({ products }: FlyerDisplayProps) => {
   return (
-    <div className="mx-auto w-full max-w-3xl overflow-hidden rounded-2xl border-4 border-primary shadow-2xl">
+    <div className="flyer-light-lock mx-auto w-full max-w-3xl overflow-hidden rounded-2xl border-4 border-primary shadow-2xl">
       {/* Store background banner */}
       <div className="relative h-48 w-full overflow-hidden sm:h-56">
         <img
