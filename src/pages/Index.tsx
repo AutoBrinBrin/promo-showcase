@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { getProducts, type Product } from "@/lib/productStore";
 import FlyerDisplay from "@/components/FlyerDisplay";
 import DarkModeToggle from "@/components/DarkModeToggle";
+import storeBg from "@/assets/store-bg.png";
 import { Button } from "@/components/ui/button";
 import { Settings } from "lucide-react";
 
