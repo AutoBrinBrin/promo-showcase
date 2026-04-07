@@ -86,6 +86,18 @@ const Dashboard = () => {
             <Trash2 className="mr-1 h-4 w-4" />
             Limpar tudo
           </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={async () => {
+              await supabase.auth.signOut();
+              navigate("/login");
+              toast.success("Logout realizado.");
+            }}
+          >
+            <LogOut className="mr-1 h-4 w-4" />
+            Sair
+          </Button>
         </div>
       </header>
 
