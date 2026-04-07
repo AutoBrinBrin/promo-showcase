@@ -15,6 +15,7 @@ import { ArrowLeft, ImagePlus, LogOut, Package, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
 const Dashboard = () => {
+  const navigate = useNavigate();
   const [products, setProducts] = useState<Product[]>([]);
   const [name, setName] = useState("");
   const [originalPrice, setOriginalPrice] = useState("");
