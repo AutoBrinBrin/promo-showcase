@@ -4,25 +4,27 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Lock, Mail, Eye, EyeOff, ShieldCheck } from "lucide-react";
+import { Lock, User, Eye, EyeOff, ShieldCheck } from "lucide-react";
 import { toast } from "sonner";
 
 const Login = () => {
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email || !password) {
+    if (!username || !password) {
       toast.error("Preencha todos os campos.");
       return;
     }
 
     setLoading(true);
     try {
+      // Maps username to internal email format
+      const email = `${username.toLowerCase().trim()}@brsupermercados.local`;
       const { error } = await supabase.auth.signInWithPassword({
         email,
         password,
@@ -31,7 +33,7 @@ const Login = () => {
       toast.success("Login realizado com sucesso!");
       navigate("/dashboard");
     } catch (error: any) {
-      toast.error(error.message || "Credenciais inválidas.");
+      toast.error("Usuário ou senha inválidos.");
     } finally {
       setLoading(false);
     }
@@ -54,17 +56,17 @@ const Login = () => {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="username">Usuário</Label>
             <div className="relative">
-              <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <User className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="seu@email.com"
+                id="username"
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                placeholder="Digite seu usuário"
                 className="pl-10"
-                autoComplete="email"
+                autoComplete="username"
               />
             </div>
           </div>
