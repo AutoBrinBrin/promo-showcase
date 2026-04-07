@@ -1,11 +1,9 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+
 import { getProducts, type Product } from "@/lib/productStore";
 import FlyerDisplay from "@/components/FlyerDisplay";
 import DarkModeToggle from "@/components/DarkModeToggle";
 
-import { Button } from "@/components/ui/button";
-import { Settings } from "lucide-react";
 
 const Index = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -21,12 +19,6 @@ const Index = () => {
           <h2 className="text-lg font-bold text-foreground">🛒 Super Rede</h2>
           <div className="flex items-center gap-3">
             <DarkModeToggle />
-            <Link to="/dashboard">
-              <Button variant="outline" size="sm">
-                <Settings className="mr-1 h-4 w-4" />
-                Painel
-              </Button>
-            </Link>
           </div>
         </div>
       </header>

@@ -13,7 +13,6 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [isSignUp, setIsSignUp] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -21,32 +20,18 @@ const Login = () => {
       toast.error("Preencha todos os campos.");
       return;
     }
-    if (password.length < 6) {
-      toast.error("A senha deve ter no mínimo 6 caracteres.");
-      return;
-    }
 
     setLoading(true);
     try {
-      if (isSignUp) {
-        const { error } = await supabase.auth.signUp({
-          email,
-          password,
-          options: { emailRedirectTo: window.location.origin },
-        });
-        if (error) throw error;
-        toast.success("Conta criada! Verifique seu email para confirmar.");
-      } else {
-        const { error } = await supabase.auth.signInWithPassword({
-          email,
-          password,
-        });
-        if (error) throw error;
-        toast.success("Login realizado com sucesso!");
-        navigate("/dashboard");
-      }
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+      if (error) throw error;
+      toast.success("Login realizado com sucesso!");
+      navigate("/dashboard");
     } catch (error: any) {
-      toast.error(error.message || "Erro ao autenticar.");
+      toast.error(error.message || "Credenciais inválidas.");
     } finally {
       setLoading(false);
     }
@@ -60,12 +45,10 @@ const Login = () => {
             <ShieldCheck className="h-7 w-7 text-primary" />
           </div>
           <h1 className="text-2xl font-bold text-card-foreground">
-            {isSignUp ? "Criar Conta" : "Acesso Restrito"}
+            Acesso Restrito
           </h1>
           <p className="text-sm text-muted-foreground">
-            {isSignUp
-              ? "Crie sua conta para gerenciar o painel"
-              : "Faça login para acessar o painel de ofertas"}
+            Faça login para acessar o painel de ofertas
           </p>
         </div>
 
@@ -97,7 +80,7 @@ const Login = () => {
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
                 className="pl-10 pr-10"
-                autoComplete={isSignUp ? "new-password" : "current-password"}
+                autoComplete="current-password"
               />
               <button
                 type="button"
@@ -111,24 +94,9 @@ const Login = () => {
           </div>
 
           <Button type="submit" className="w-full" disabled={loading}>
-            {loading
-              ? "Aguarde..."
-              : isSignUp
-                ? "Criar Conta"
-                : "Entrar"}
+            {loading ? "Aguarde..." : "Entrar"}
           </Button>
         </form>
-
-        <p className="text-center text-sm text-muted-foreground">
-          {isSignUp ? "Já tem uma conta?" : "Não tem conta?"}{" "}
-          <button
-            type="button"
-            onClick={() => setIsSignUp(!isSignUp)}
-            className="font-medium text-primary hover:underline"
-          >
-            {isSignUp ? "Fazer login" : "Criar conta"}
-          </button>
-        </p>
       </div>
     </div>
   );
