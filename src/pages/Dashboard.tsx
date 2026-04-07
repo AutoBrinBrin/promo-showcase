@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   getProducts,
   addProduct,
@@ -7,13 +7,15 @@ import {
   removeAllProducts,
   type Product,
 } from "@/lib/productStore";
+import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ArrowLeft, ImagePlus, Package, Trash2 } from "lucide-react";
+import { ArrowLeft, ImagePlus, LogOut, Package, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
 const Dashboard = () => {
+  const navigate = useNavigate();
   const [products, setProducts] = useState<Product[]>([]);
   const [name, setName] = useState("");
   const [originalPrice, setOriginalPrice] = useState("");
@@ -83,6 +85,18 @@ const Dashboard = () => {
           <Button variant="destructive" size="sm" onClick={handleRemoveAll}>
             <Trash2 className="mr-1 h-4 w-4" />
             Limpar tudo
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={async () => {
+              await supabase.auth.signOut();
+              navigate("/login");
+              toast.success("Logout realizado.");
+            }}
+          >
+            <LogOut className="mr-1 h-4 w-4" />
+            Sair
           </Button>
         </div>
       </header>
