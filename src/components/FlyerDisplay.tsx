@@ -1,10 +1,10 @@
-import type { Product } from "@/lib/productStore";
+import type { FlyerProduct } from "@/lib/productStore";
 import ProductCard from "./ProductCard";
 import { ShoppingCart } from "lucide-react";
 import storeBg from "@/assets/store-bg.png";
 
 interface FlyerDisplayProps {
-  products: Product[];
+  products: FlyerProduct[];
 }
 
 const FlyerDisplay = ({ products }: FlyerDisplayProps) => {
