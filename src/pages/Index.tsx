@@ -1,15 +1,13 @@
 import { useEffect, useState } from "react";
-
-import { getProducts, type Product } from "@/lib/productStore";
+import { getFlyerItems, type FlyerProduct } from "@/lib/productStore";
 import FlyerDisplay from "@/components/FlyerDisplay";
 import DarkModeToggle from "@/components/DarkModeToggle";
 
-
 const Index = () => {
-  const [products, setProducts] = useState<Product[]>([]);
+  const [products, setProducts] = useState<FlyerProduct[]>([]);
 
   useEffect(() => {
-    setProducts(getProducts());
+    getFlyerItems().then(setProducts).catch(() => {});
   }, []);
 
   return (

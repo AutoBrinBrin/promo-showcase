@@ -14,7 +14,59 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      flyer_items: {
+        Row: {
+          created_at: string
+          discount_price: number
+          id: string
+          original_price: number
+          preset_id: string
+        }
+        Insert: {
+          created_at?: string
+          discount_price: number
+          id?: string
+          original_price: number
+          preset_id: string
+        }
+        Update: {
+          created_at?: string
+          discount_price?: number
+          id?: string
+          original_price?: number
+          preset_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "flyer_items_preset_id_fkey"
+            columns: ["preset_id"]
+            isOneToOne: false
+            referencedRelation: "product_presets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      product_presets: {
+        Row: {
+          created_at: string
+          id: string
+          image_url: string | null
+          name: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          name: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          name?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

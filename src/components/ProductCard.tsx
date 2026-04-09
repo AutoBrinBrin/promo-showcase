@@ -1,8 +1,8 @@
-import type { Product } from "@/lib/productStore";
+import type { FlyerProduct } from "@/lib/productStore";
 import { Package } from "lucide-react";
 
 interface ProductCardProps {
-  product: Product;
+  product: FlyerProduct;
 }
 
 const ProductCard = ({ product }: ProductCardProps) => {

@@ -1,4 +1,21 @@
-export interface Product {
+import { supabase } from "@/integrations/supabase/client";
+
+export interface ProductPreset {
+  id: string;
+  name: string;
+  image_url: string | null;
+}
+
+export interface FlyerItem {
+  id: string;
+  preset_id: string;
+  original_price: number;
+  discount_price: number;
+  preset?: ProductPreset;
+}
+
+// Combined type for display
+export interface FlyerProduct {
   id: string;
   name: string;
   originalPrice: number;
@@ -6,48 +23,86 @@ export interface Product {
   imageUrl: string;
 }
 
-const STORAGE_KEY = "br-supermercados-products";
-
-const defaultProducts: Product[] = [
-  { id: "1", name: "Salgadinho Gula Sticks", originalPrice: 2.49, discountPrice: 1.49, imageUrl: "" },
-  { id: "2", name: "Leite Ninho Instantâneo 380g", originalPrice: 19.98, discountPrice: 14.98, imageUrl: "" },
-  { id: "3", name: "Mucilon Sachê 180g", originalPrice: 8.99, discountPrice: 5.99, imageUrl: "" },
-  { id: "4", name: "Nescau em Pó 370g", originalPrice: 13.98, discountPrice: 9.98, imageUrl: "" },
-  { id: "5", name: "Sucrilhos Kelloggs 240g", originalPrice: 10.98, discountPrice: 7.98, imageUrl: "" },
-  { id: "6", name: "Pão de Forma Vaibem 450g", originalPrice: 6.49, discountPrice: 4.49, imageUrl: "" },
-  { id: "7", name: "Look Itamaraty 55g", originalPrice: 4.98, discountPrice: 2.98, imageUrl: "" },
-  { id: "8", name: "Bombom Garoto 250g", originalPrice: 14.98, discountPrice: 10.98, imageUrl: "" },
-  { id: "9", name: "Achocolatado Energia 200ml", originalPrice: 1.49, discountPrice: 0.89, imageUrl: "" },
-  { id: "10", name: "Arroz Rampinelli 5kg", originalPrice: 32.98, discountPrice: 26.98, imageUrl: "" },
-];
-
-export function getProducts(): Product[] {
-  try {
-    const data = localStorage.getItem(STORAGE_KEY);
-    if (data) return JSON.parse(data);
-  } catch {}
-  return defaultProducts;
+export async function getPresets(): Promise<ProductPreset[]> {
+  const { data, error } = await supabase
+    .from("product_presets")
+    .select("*")
+    .order("name");
+  if (error) throw error;
+  return data ?? [];
 }
 
-export function saveProducts(products: Product[]): void {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(products));
+export async function createPreset(name: string, imageFile?: File): Promise<ProductPreset> {
+  let image_url: string | null = null;
+
+  if (imageFile) {
+    const ext = imageFile.name.split(".").pop();
+    const path = `presets/${Date.now()}.${ext}`;
+    const { error: uploadError } = await supabase.storage
+      .from("product-images")
+      .upload(path, imageFile);
+    if (uploadError) throw uploadError;
+    const { data: urlData } = supabase.storage
+      .from("product-images")
+      .getPublicUrl(path);
+    image_url = urlData.publicUrl;
+  }
+
+  const { data, error } = await supabase
+    .from("product_presets")
+    .insert({ name, image_url })
+    .select()
+    .single();
+  if (error) throw error;
+  return data;
 }
 
-export function addProduct(product: Omit<Product, "id">): Product[] {
-  const products = getProducts();
-  const newProduct: Product = { ...product, id: Date.now().toString() };
-  products.push(newProduct);
-  saveProducts(products);
-  return products;
+export async function deletePreset(id: string): Promise<void> {
+  const { error } = await supabase
+    .from("product_presets")
+    .delete()
+    .eq("id", id);
+  if (error) throw error;
 }
 
-export function removeProduct(id: string): Product[] {
-  const products = getProducts().filter((p) => p.id !== id);
-  saveProducts(products);
-  return products;
+export async function getFlyerItems(): Promise<FlyerProduct[]> {
+  const { data, error } = await supabase
+    .from("flyer_items")
+    .select("*, product_presets(*)")
+    .order("created_at");
+  if (error) throw error;
+  return (data ?? []).map((item: any) => ({
+    id: item.id,
+    name: item.product_presets?.name ?? "Produto",
+    originalPrice: Number(item.original_price),
+    discountPrice: Number(item.discount_price),
+    imageUrl: item.product_presets?.image_url ?? "",
+  }));
 }
 
-export function removeAllProducts(): Product[] {
-  saveProducts([]);
-  return [];
+export async function addFlyerItem(
+  presetId: string,
+  originalPrice: number,
+  discountPrice: number
+): Promise<void> {
+  const { error } = await supabase
+    .from("flyer_items")
+    .insert({ preset_id: presetId, original_price: originalPrice, discount_price: discountPrice });
+  if (error) throw error;
+}
+
+export async function removeFlyerItem(id: string): Promise<void> {
+  const { error } = await supabase
+    .from("flyer_items")
+    .delete()
+    .eq("id", id);
+  if (error) throw error;
+}
+
+export async function removeAllFlyerItems(): Promise<void> {
+  const { error } = await supabase
+    .from("flyer_items")
+    .delete()
+    .neq("id", "00000000-0000-0000-0000-000000000000");
+  if (error) throw error;
 }
