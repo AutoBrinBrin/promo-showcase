@@ -106,3 +106,28 @@ export async function removeAllFlyerItems(): Promise<void> {
     .neq("id", "00000000-0000-0000-0000-000000000000");
   if (error) throw error;
 }
+
+export interface FlyerSettings {
+  promo_end_date: string | null;
+  promo_end_time: string | null;
+}
+
+const SETTINGS_ID = "00000000-0000-0000-0000-000000000001";
+
+export async function getFlyerSettings(): Promise<FlyerSettings> {
+  const { data, error } = await supabase
+    .from("flyer_settings")
+    .select("promo_end_date, promo_end_time")
+    .eq("id", SETTINGS_ID)
+    .single();
+  if (error) throw error;
+  return data;
+}
+
+export async function updateFlyerSettings(settings: Partial<FlyerSettings>): Promise<void> {
+  const { error } = await supabase
+    .from("flyer_settings")
+    .update({ ...settings, updated_at: new Date().toISOString() })
+    .eq("id", SETTINGS_ID);
+  if (error) throw error;
+}

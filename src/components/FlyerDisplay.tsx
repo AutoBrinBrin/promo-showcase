@@ -5,9 +5,18 @@ import storeBg from "@/assets/store-bg.png";
 
 interface FlyerDisplayProps {
   products: FlyerProduct[];
+  promoEndDate?: string | null;
+  promoEndTime?: string | null;
 }
 
-const FlyerDisplay = ({ products }: FlyerDisplayProps) => {
+const FlyerDisplay = ({ products, promoEndDate, promoEndTime }: FlyerDisplayProps) => {
+  const promoText = (() => {
+    if (!promoEndDate) return "Ofertas válidas enquanto durarem os estoques • Imagens ilustrativas";
+    const [y, m, d] = promoEndDate.split("-");
+    const datePart = `${d}/${m}/${y}`;
+    const timePart = promoEndTime ? ` às ${promoEndTime.slice(0, 5)}` : "";
+    return `Válida até ${datePart}${timePart} • Imagens ilustrativas`;
+  })();
   return (
     <div className="flyer-light-lock mx-auto w-full max-w-3xl overflow-hidden rounded-2xl border-4 border-primary shadow-2xl">
       {/* Store background banner */}
@@ -34,7 +43,7 @@ const FlyerDisplay = ({ products }: FlyerDisplayProps) => {
       {/* Subheader */}
       <div className="bg-secondary px-4 py-2 text-center">
         <span className="text-sm font-bold text-secondary-foreground">
-          Ofertas válidas enquanto durarem os estoques • Imagens ilustrativas
+          {promoText}
         </span>
       </div>
 
