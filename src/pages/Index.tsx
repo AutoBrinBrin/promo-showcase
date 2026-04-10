@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
-import { getFlyerItems, type FlyerProduct } from "@/lib/productStore";
+import { getFlyerItems, getFlyerSettings, type FlyerProduct, type FlyerSettings } from "@/lib/productStore";
 import FlyerDisplay from "@/components/FlyerDisplay";
 import DarkModeToggle from "@/components/DarkModeToggle";
 
 const Index = () => {
   const [products, setProducts] = useState<FlyerProduct[]>([]);
+  const [settings, setSettings] = useState<FlyerSettings | null>(null);
 
   useEffect(() => {
     getFlyerItems().then(setProducts).catch(() => {});
+    getFlyerSettings().then(setSettings).catch(() => {});
   }, []);
 
   return (
@@ -22,7 +24,7 @@ const Index = () => {
       </header>
 
       <main className="px-4 py-8">
-        <FlyerDisplay products={products} />
+        <FlyerDisplay products={products} promoEndDate={settings?.promo_end_date} promoEndTime={settings?.promo_end_time} />
       </main>
     </div>
   );
