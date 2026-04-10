@@ -46,6 +46,30 @@ export type Database = {
           },
         ]
       }
+      flyer_settings: {
+        Row: {
+          created_at: string
+          id: string
+          promo_end_date: string | null
+          promo_end_time: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          promo_end_date?: string | null
+          promo_end_time?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          promo_end_date?: string | null
+          promo_end_time?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       product_presets: {
         Row: {
           created_at: string
