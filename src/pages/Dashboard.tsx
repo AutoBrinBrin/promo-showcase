@@ -8,8 +8,11 @@ import {
   addFlyerItem,
   removeFlyerItem,
   removeAllFlyerItems,
+  getFlyerSettings,
+  updateFlyerSettings,
   type ProductPreset,
   type FlyerProduct,
+  type FlyerSettings,
 } from "@/lib/productStore";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -17,6 +20,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
   ArrowLeft,
+  Calendar,
+  Clock,
   ImagePlus,
   LogOut,
   Package,
@@ -43,11 +48,19 @@ const Dashboard = () => {
 
   const [loading, setLoading] = useState(false);
 
+  // Promo settings
+  const [promoDate, setPromoDate] = useState("");
+  const [promoTime, setPromoTime] = useState("");
+  const [showTime, setShowTime] = useState(false);
+
   const loadData = async () => {
     try {
-      const [p, f] = await Promise.all([getPresets(), getFlyerItems()]);
+      const [p, f, s] = await Promise.all([getPresets(), getFlyerItems(), getFlyerSettings()]);
       setPresets(p);
       setFlyerItems(f);
+      setPromoDate(s.promo_end_date ?? "");
+      setPromoTime(s.promo_end_time?.slice(0, 5) ?? "");
+      setShowTime(!!s.promo_end_time);
     } catch {
       toast.error("Erro ao carregar dados.");
     }
