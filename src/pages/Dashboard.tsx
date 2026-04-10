@@ -188,6 +188,88 @@ const Dashboard = () => {
       </header>
 
       <main className="mx-auto max-w-4xl px-4 py-8 space-y-8">
+        {/* Promo validity settings */}
+        <section className="rounded-xl border border-border bg-card p-6 shadow-sm">
+          <h3 className="mb-4 text-lg font-bold text-card-foreground flex items-center gap-2">
+            <Calendar className="h-5 w-5" />
+            Validade da Promoção
+          </h3>
+          <div className="flex flex-wrap items-end gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="promoDate">Data limite</Label>
+              <Input
+                id="promoDate"
+                type="date"
+                value={promoDate}
+                onChange={(e) => setPromoDate(e.target.value)}
+              />
+            </div>
+            {showTime && (
+              <div className="space-y-2">
+                <Label htmlFor="promoTime">Horário limite</Label>
+                <Input
+                  id="promoTime"
+                  type="time"
+                  value={promoTime}
+                  onChange={(e) => setPromoTime(e.target.value)}
+                />
+              </div>
+            )}
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                setShowTime(!showTime);
+                if (showTime) setPromoTime("");
+              }}
+            >
+              <Clock className="mr-1 h-4 w-4" />
+              {showTime ? "Remover horário" : "Adicionar horário"}
+            </Button>
+            <Button
+              size="sm"
+              onClick={async () => {
+                try {
+                  await updateFlyerSettings({
+                    promo_end_date: promoDate || null,
+                    promo_end_time: promoTime ? promoTime + ":00" : null,
+                  });
+                  toast.success("Validade atualizada!");
+                } catch {
+                  toast.error("Erro ao salvar validade.");
+                }
+              }}
+            >
+              Salvar
+            </Button>
+            {promoDate && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={async () => {
+                  try {
+                    await updateFlyerSettings({ promo_end_date: null, promo_end_time: null });
+                    setPromoDate("");
+                    setPromoTime("");
+                    setShowTime(false);
+                    toast.success("Validade removida!");
+                  } catch {
+                    toast.error("Erro ao remover.");
+                  }
+                }}
+              >
+                <X className="mr-1 h-4 w-4" />
+                Limpar
+              </Button>
+            )}
+          </div>
+          {promoDate && (
+            <p className="mt-3 text-sm text-muted-foreground">
+              Prévia: <span className="font-semibold text-foreground">Válida até {promoDate.split("-").reverse().join("/")}{showTime && promoTime ? ` às ${promoTime}` : ""}</span>
+            </p>
+          )}
+        </section>
+
         {/* Add to flyer */}
         <section className="rounded-xl border border-border bg-card p-6 shadow-sm">
           <h3 className="mb-4 text-lg font-bold text-card-foreground">
